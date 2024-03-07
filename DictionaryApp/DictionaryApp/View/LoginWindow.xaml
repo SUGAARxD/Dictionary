@@ -1,0 +1,71 @@
+﻿<Window x:Class="DictionaryApp.View.LoginWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DictionaryApp.View"
+        xmlns:vm="clr-namespace:DictionaryApp.ViewModel"
+        mc:Ignorable="d"
+        Title="LoginWindow" Height="600" Width="1000"
+        WindowStartupLocation="CenterScreen">
+    
+    <Window.DataContext>
+        <vm:LoginVM/>
+    </Window.DataContext>
+    
+    <Grid
+        Background="#FFFFEAE2">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="3*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <Button Content="Back" 
+                HorizontalAlignment="Left" 
+                VerticalAlignment="Top" 
+                Width="50" 
+                Height="30" 
+                FontSize="20"
+                Background="#FFFFDAC5" 
+                BorderBrush="#FFF9AD91" Click="GoToMainWindow"
+                />
+        
+        <StackPanel 
+            Grid.Row="1" Margin="0 50 0 0">
+
+            <Label Content="Username" 
+                   HorizontalAlignment="Center" 
+                   Margin="0,0,0,10" 
+                   FontSize="20"
+                   />
+            <TextBox x:Name="LoginBox" 
+                     Width="200" Height="30" 
+                     Margin="0,0,0,10" 
+                     FontSize="20"
+                     BorderBrush="#FFF9AD91"
+                     Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"
+                     />
+            <Label Content="Password" 
+                   HorizontalAlignment="Center" 
+                   Margin="10,0,0,10" 
+                   FontSize="20"
+                   />
+            <TextBox x:Name="PasswordBox" 
+                         Width="200" Height="30"
+                         Margin="0,0,0,30" 
+                         FontSize="20"
+                         BorderBrush="#FFF9AD91"
+                         Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}"
+                         />
+            <Button Content="Login" 
+                    Width="200" Height="40" 
+                    Margin="0,0,0,10" FontSize="20"
+                    Background="#FFFFDAC5" 
+                    BorderBrush="#FFF9AD91"
+                    Command="{Binding Path=LoginCommand}"
+                    />
+
+        </StackPanel>
+    </Grid>
+</Window>
