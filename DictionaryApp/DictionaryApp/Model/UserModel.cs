@@ -2,7 +2,29 @@
 {
     internal class UserModel
     {
-        public string Username { get; set; } 
-        public string Password { get; set; }
+        private string _username;
+        public string Username 
+        { 
+            get
+            {
+                return _username;
+            }
+            set
+            {
+                _username = value;
+            }
+        }
+        private string _password;
+        public string Password
+        {
+            get
+            {
+                return _password;
+            }
+            set
+            {
+                _password = value;
+            }
+        }
     }
 }

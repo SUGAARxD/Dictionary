@@ -1,5 +1,7 @@
 ﻿using DictionaryApp.Model;
 using DictionaryApp.View;
+using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -47,19 +49,20 @@ namespace DictionaryApp.ViewModel
         }
         public void ExecuteLogin(object parameter)
         {
-            if (Username.Equals("Megatron") && Password.Equals("Optimus"))
+            List<UserModel> users = new List<UserModel>();
+            foreach(UserModel user in users)
             {
-
-                LoginWindow loginWindow = Application.Current.Windows.OfType<LoginWindow>().First();
-                AdministratorWindow administratorWindow = new AdministratorWindow();
-                administratorWindow.Show();
-                loginWindow.Close();
-
+                if (Username.Equals(user.Username) && Password.Equals(user.Password))
+                {
+                    LoginWindow loginWindow = Application.Current.Windows.OfType<LoginWindow>().First();
+                    AdministratorWindow administratorWindow = new AdministratorWindow();
+                    administratorWindow.Show();
+                    loginWindow.Close();
+                    return;
+                }
             }
-            else
-            {
-                MessageBox.Show("Invalid username or password.");
-            }
+            
+            MessageBox.Show("Invalid username or password.");
         }
         public bool CanLogin(object parameter)
         {
