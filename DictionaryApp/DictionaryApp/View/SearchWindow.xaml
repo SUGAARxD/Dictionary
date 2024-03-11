@@ -4,9 +4,16 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DictionaryApp.View"
+        xmlns:vm="clr-namespace:DictionaryApp.ViewModel"
         mc:Ignorable="d"
         Title="SearchWindow" Height="600" Width="1000"
+        ResizeMode="CanMinimize"
         WindowStartupLocation="CenterScreen">
+
+    <Window.DataContext>
+        <vm:SearchVM/>
+    </Window.DataContext>
+
     <Grid
         Background="#FFFFEAE2">
 
@@ -15,22 +22,61 @@
             <RowDefinition Height="4*"/>
         </Grid.RowDefinitions>
 
-        <Grid
-            Grid.Row="0">
-            <!-- search bar, i can create the search bar outside this grid ig -->
-            <!--plus category slide button-->
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel
+                Margin="120,43.4,0,0">
+
+                <TextBox
+                    Grid.Column="0"
+                    Width="600"
+                    Height="30"
+                    FontSize="20"
+                    HorizontalAlignment="Left"
+                    BorderBrush="#FFF9AD91"
+                    Text="{Binding Word, UpdateSourceTrigger=PropertyChanged}"
+                        />
+
+                <ComboBox
+                    Width="auto"
+                    Height="30"
+                    HorizontalAlignment="Left"
+                    ItemsSource="{Binding CategoryList}"
+                        />
+
+            </StackPanel>
+            
+            <Button 
+                Grid.Column="1"
+                Content="Search"
+                Width="Auto"
+                MaxWidth="50"
+                Height="30"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Left"
+                FontSize="15"
+                Background="#FFFFDAC5" 
+                BorderBrush="#FFF9AD91"
+                Command="{Binding Path=SearchCommand}"
+                    />
         </Grid>
 
         <Grid
             Grid.Row="1">
-            <!-- output of the search bar :))))-->
+
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1.5*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            
+
+            <!-- output of the search bar :))))-->
+
         </Grid>
-        
+
         <Button Content="Back" 
                 HorizontalAlignment="Left" 
                 VerticalAlignment="Top" 
@@ -40,6 +86,6 @@
                 Background="#FFFFDAC5" 
                 BorderBrush="#FFF9AD91" Click="GoToMainWindow"
                 />
-        
+
     </Grid>
 </Window>

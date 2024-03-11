@@ -7,6 +7,7 @@
         xmlns:vm="clr-namespace:DictionaryApp.ViewModel"
         mc:Ignorable="d"
         Title="LoginWindow" Height="600" Width="1000"
+        ResizeMode="CanMinimize"
         WindowStartupLocation="CenterScreen">
     
     <Window.DataContext>
@@ -23,7 +24,8 @@
                 Height="30" 
                 FontSize="20"
                 Background="#FFFFDAC5" 
-                BorderBrush="#FFF9AD91" Click="GoToMainWindow"
+                BorderBrush="#FFF9AD91" 
+                Click="GoToMainWindow"
                 />
         
         <StackPanel 

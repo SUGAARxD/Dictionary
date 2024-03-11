@@ -1,7 +1,6 @@
 ﻿using DictionaryApp.Model;
 using DictionaryApp.View;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -47,7 +46,7 @@ namespace DictionaryApp.ViewModel
                 return _loginCommand;
             }
         }
-        public void ExecuteLogin(object parameter)
+        private void ExecuteLogin(object parameter)
         {
             List<UserModel> users = new List<UserModel>();
             foreach(UserModel user in users)
@@ -64,7 +63,7 @@ namespace DictionaryApp.ViewModel
             
             MessageBox.Show("Invalid username or password.");
         }
-        public bool CanLogin(object parameter)
+        private bool CanLogin(object parameter)
         {
             return !string.IsNullOrWhiteSpace(Username) && !string.IsNullOrWhiteSpace(Password);
         }

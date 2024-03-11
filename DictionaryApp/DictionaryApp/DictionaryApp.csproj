@@ -63,6 +63,7 @@
     <Compile Include="ViewModel\BaseVM.cs" />
     <Compile Include="ViewModel\LoginVM.cs" />
     <Compile Include="ViewModel\RelayCommand.cs" />
+    <Compile Include="ViewModel\SearchVM.cs" />
     <Compile Include="View\AdministratorWindow.xaml.cs">
       <DependentUpon>AdministratorWindow.xaml</DependentUpon>
     </Compile>
@@ -127,6 +128,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="resources\Images\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="resources\Database\words.json" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

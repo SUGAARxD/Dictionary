@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:DictionaryApp"
         mc:Ignorable="d"
         Title="Dictionary" Height="600" Width="1000"
+        ResizeMode="CanMinimize"
         WindowStartupLocation="CenterScreen">
     <Grid
         Background="#FFFFEAE2">
