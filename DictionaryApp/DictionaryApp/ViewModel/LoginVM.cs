@@ -36,16 +36,16 @@ namespace DictionaryApp.ViewModel
                 _user.Password = value;
             }
         }
-        private static readonly string _folderPath = @"..\..\resources\Database\users.json";
+        private static readonly string _filePath = @"..\..\resources\Database\users.json";
         private readonly List<UserModel> _users;
         public LoginVM()
         {
             _user = new UserModel();
 
             _users = new List<UserModel>();
-            if (File.Exists(_folderPath))
+            if (File.Exists(_filePath))
             {
-                string jsonString = File.ReadAllText(_folderPath);
+                string jsonString = File.ReadAllText(_filePath);
                 _users = JsonConvert.DeserializeObject<List<UserModel>>(jsonString);
             }
         }
@@ -65,6 +65,7 @@ namespace DictionaryApp.ViewModel
             {
                 if (Username.Equals(user.Username) && Password.Equals(user.Password))
                 {
+                    MessageBox.Show("Welcome!");
                     LoginWindow loginWindow = Application.Current.Windows.OfType<LoginWindow>().First();
                     AdministratorWindow administratorWindow = new AdministratorWindow();
                     administratorWindow.Show();

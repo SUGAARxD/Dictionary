@@ -29,10 +29,10 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel
-                Margin="120,43.4,0,0">
+                Grid.Column="0"
+                Margin="120,45,0,0">
 
                 <TextBox
-                    Grid.Column="0"
                     Width="600"
                     Height="30"
                     FontSize="20"
@@ -41,17 +41,26 @@
                     Text="{Binding Word, UpdateSourceTrigger=PropertyChanged}"
                         />
 
-                <ComboBox
-                    Width="auto"
-                    Height="30"
-                    HorizontalAlignment="Left"
-                    ItemsSource="{Binding CategoryList}"
-                        />
-
             </StackPanel>
-            
-            <Button 
+
+            <ListBox
+                Width="600"
+                VerticalContentAlignment="Stretch"
+                Height="Auto"
+                FontSize="20"
+                HorizontalAlignment="Left"
+                BorderBrush="#FFF9AD91"
+                Background="White"
+                ItemsSource="{Binding Suggestions}"
+                Visibility="{Binding IsListBoxVisible}"
+                Margin="120,74,0,0"
+                    />
+
+            <StackPanel
                 Grid.Column="1"
+                Margin="0,45,0,0">
+
+                <Button 
                 Content="Search"
                 Width="Auto"
                 MaxWidth="50"
@@ -59,10 +68,21 @@
                 VerticalAlignment="Center"
                 HorizontalAlignment="Left"
                 FontSize="15"
-                Background="#FFFFDAC5" 
+                Background="#FFFFDAC5"
                 BorderBrush="#FFF9AD91"
                 Command="{Binding Path=SearchCommand}"
                     />
+
+                <ComboBox
+                Width="auto"
+                Height="30"
+                HorizontalAlignment="Left"
+                ItemsSource="{Binding CategoryList}"
+                Text="{Binding Category}"
+                    />
+
+            </StackPanel>
+
         </Grid>
 
         <Grid
