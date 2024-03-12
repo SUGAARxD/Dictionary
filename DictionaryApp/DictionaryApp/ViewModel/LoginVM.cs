@@ -1,9 +1,13 @@
 ﻿using DictionaryApp.Model;
 using DictionaryApp.View;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using System.IO;
+using System;
+using System.Reflection;
 
 namespace DictionaryApp.ViewModel
 {
@@ -32,9 +36,18 @@ namespace DictionaryApp.ViewModel
                 _user.Password = value;
             }
         }
+        private static readonly string _folderPath = @"..\..\resources\Database\users.json";
+        private readonly List<UserModel> _users;
         public LoginVM()
         {
             _user = new UserModel();
+
+            _users = new List<UserModel>();
+            if (File.Exists(_folderPath))
+            {
+                string jsonString = File.ReadAllText(_folderPath);
+                _users = JsonConvert.DeserializeObject<List<UserModel>>(jsonString);
+            }
         }
         private ICommand _loginCommand;
         public ICommand LoginCommand
@@ -48,8 +61,7 @@ namespace DictionaryApp.ViewModel
         }
         private void ExecuteLogin(object parameter)
         {
-            List<UserModel> users = new List<UserModel>();
-            foreach(UserModel user in users)
+            foreach(UserModel user in _users)
             {
                 if (Username.Equals(user.Username) && Password.Equals(user.Password))
                 {

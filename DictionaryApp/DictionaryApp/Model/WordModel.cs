@@ -2,7 +2,7 @@
 {
     internal class WordModel
     {
-        public static string DefaultImagePath = "./resources/Images/";
+        public static string DefaultImagePath = @"..\..\resources\Images\default_image.png";
 
         public WordModel()
         {

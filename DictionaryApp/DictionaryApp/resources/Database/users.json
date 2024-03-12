@@ -1,4 +1,30 @@
-﻿{
-  "Name": "",
-  "Password": ""
-}
+﻿[
+  {
+    "Username": "Admin",
+    "Password": "123"
+  },
+  {
+    "Username": "grr",
+    "Password": "mrr"
+  },
+  {
+    "Username": "gata.",
+    "Password": "ajunge."
+  },
+  {
+    "Username": "noname",
+    "Password": "nopassword"
+  },
+  {
+    "Username": "maine",
+    "Password": "poimaine"
+  },
+  {
+    "Username": "bugs?",
+    "Password": "bugs!"
+  },
+  {
+    "Username": "nu_vrea",
+    "Password": "sa_mearga"
+  }
+]

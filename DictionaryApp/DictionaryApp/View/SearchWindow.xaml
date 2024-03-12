@@ -84,7 +84,8 @@
                 Height="30" 
                 FontSize="20"
                 Background="#FFFFDAC5" 
-                BorderBrush="#FFF9AD91" Click="GoToMainWindow"
+                BorderBrush="#FFF9AD91" 
+                Click="GoToMainWindow"
                 />
 
     </Grid>
