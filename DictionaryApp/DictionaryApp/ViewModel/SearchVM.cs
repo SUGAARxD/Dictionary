@@ -6,10 +6,14 @@ using Newtonsoft.Json;
 using System.IO;
 using System.Linq;
 using System.Windows;
+using System.Windows.Media.Imaging;
+using System;
+using DictionaryApp.Properties;
+using System.Collections;
 
 namespace DictionaryApp.ViewModel
 {
-    internal class SearchVM :BaseVM
+    internal class SearchVM : BaseVM
     {
         private string _word;
         public string Word
@@ -18,14 +22,10 @@ namespace DictionaryApp.ViewModel
             set
             {
                 _word = value;
+                
+                UpdateSuggestions();
 
-                Suggestions = new ObservableCollection<string>(_words
-                    .Where(item => item.Text.StartsWith(_word)
-                    && (item.Category.Equals(_category) || string.IsNullOrEmpty(_category)))
-                    .Select(item => item.Text)
-                    .ToList());
-
-                _isListBoxVisible = string.IsNullOrEmpty(value) ? Visibility.Collapsed : Visibility.Visible; 
+                IsListBoxVisible = (string.IsNullOrEmpty(value) || Suggestions.Count() == 0)? Visibility.Hidden : Visibility.Visible;
 
                 NotifyPropertyChanged(nameof(Word));
             }
@@ -40,16 +40,18 @@ namespace DictionaryApp.ViewModel
                 NotifyPropertyChanged(nameof(Description));
             }
         }
-        private string _imagePath;
-        public string ImagePath
+
+        private BitmapImage _imageSource;
+        public BitmapImage ImageSource
         {
-            get => _imagePath;
-            set
+            get => _imageSource;
+            private set
             {
-                _imagePath = value;
-                NotifyPropertyChanged(nameof(ImagePath));
+                _imageSource = value;
+                NotifyPropertyChanged(nameof(ImageSource));
             }
         }
+
         private string _category;
         public string Category
         {
@@ -58,6 +60,8 @@ namespace DictionaryApp.ViewModel
             {
                 _category = value;
 
+                UpdateSuggestions();
+
                 NotifyPropertyChanged(nameof(Category));
             }
         }
@@ -65,29 +69,31 @@ namespace DictionaryApp.ViewModel
         private static readonly string _filePath = @"..\..\resources\Database\words.json";
 
         private readonly List<WordModel> _words;
-        public ObservableCollection<string> Suggestions { get; set; }
+        public ObservableCollection<string> Suggestions { get; set; } = new ObservableCollection<string>();
         public ObservableCollection<string> CategoryList { get; set; }
-        
+
         public SearchVM()
         {
-            _isListBoxVisible = Visibility.Visible;
-            _word = string.Empty;
-            _category = "";
-            CategoryList = new ObservableCollection<string>
-            {
-                _category
-            };
-
+            IsListBoxVisible = Visibility.Hidden;
+            Word = string.Empty;
             _words = new List<WordModel>();
             if (File.Exists(_filePath))
             {
                 string jsonString = File.ReadAllText(_filePath);
                 _words = JsonConvert.DeserializeObject<List<WordModel>>(jsonString);
             }
-            foreach(WordModel word in _words)
+
+            Category = "";
+            CategoryList = new ObservableCollection<string>
+            {
+                _category
+            };
+            foreach (WordModel word in _words)
             {
                 CategoryList.Add(word.Category);
             }
+            ImageSource = null;
+            CategoryLabel = "Category:";
         }
 
         private ICommand _searchCommand;
@@ -104,17 +110,17 @@ namespace DictionaryApp.ViewModel
         {
             if (string.IsNullOrEmpty(_word))
             {
-                _description = string.Empty;
-                _imagePath = string.Empty;
+                Description = string.Empty;
+                ImageSource = null;
                 return;
             }
             foreach (WordModel word in _words)
             {
                 if (word.Text.Equals(_word))
                 {
-                    _description = word.Description;
-                    _imagePath = word.ImagePath;
-                    _category = word.Category;
+                    Description = word.Description;
+                    ImageSource = new BitmapImage(new Uri(word.ImagePath.Replace(@"\\", @"\"), UriKind.RelativeOrAbsolute));
+                    CategoryLabel = "Category: " + word.Category;
                     break;
                 }
             }
@@ -129,5 +135,40 @@ namespace DictionaryApp.ViewModel
                 NotifyPropertyChanged(nameof(IsListBoxVisible));
             }
         }
+        public string SelectedListBoxItem
+        {
+            set
+            {
+                _word = value;
+                IsListBoxVisible = Visibility.Hidden;
+                NotifyPropertyChanged(nameof(Word));
+            }
+        }
+        private void UpdateSuggestions()
+        {
+            Suggestions.Clear();
+            if (string.IsNullOrEmpty(_word))
+                return;
+
+            _words.Where(item => item.Text.StartsWith(_word)
+                 && (item.Category.Equals(_category) || string.IsNullOrEmpty(_category)))
+                 .Select(item => item.Text)
+                 .ToList()
+                 .ForEach(item =>
+                 {
+                     Suggestions.Add(item);
+                 });
+        }
+        private string _categoryLabel;
+        public string CategoryLabel
+        {
+            get => _categoryLabel;
+            set
+            {
+                _categoryLabel = value;
+                NotifyPropertyChanged(nameof(CategoryLabel));
+            }
+        }
+
     }
 }

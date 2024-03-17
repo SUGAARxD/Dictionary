@@ -43,19 +43,6 @@
 
             </StackPanel>
 
-            <ListBox
-                Width="600"
-                VerticalContentAlignment="Stretch"
-                Height="Auto"
-                FontSize="20"
-                HorizontalAlignment="Left"
-                BorderBrush="#FFF9AD91"
-                Background="White"
-                ItemsSource="{Binding Suggestions}"
-                Visibility="{Binding IsListBoxVisible}"
-                Margin="120,74,0,0"
-                    />
-
             <StackPanel
                 Grid.Column="1"
                 Margin="0,45,0,0">
@@ -84,7 +71,7 @@
             </StackPanel>
 
         </Grid>
-
+        
         <Grid
             Grid.Row="1">
 
@@ -93,10 +80,77 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <!-- output of the search bar :))))-->
+            <StackPanel>
+
+                <TextBox
+                    Text="{Binding CategoryLabel}"
+                    Width="400"
+                    Background="#FFFFEAE2"
+                    BorderBrush="#FFFFEAE2"
+                    FontSize="20"
+                    IsReadOnly="True"
+                    BorderThickness="0"
+                    />
+                <TextBox
+                    Text="Description:"
+                    Width="400"
+                    Background="#FFFFEAE2"
+                    BorderBrush="#FFFFEAE2"
+                    FontSize="20"
+                    IsReadOnly="True"
+                    BorderThickness="0"
+                    />
+
+                <ScrollViewer 
+                    VerticalScrollBarVisibility="Auto">
+                    <TextBox
+                        Text="{Binding Description}"
+                        Width="400"
+                        Height="400"
+                        TextWrapping="Wrap"
+                        TextAlignment="Left"
+                        BorderBrush="#FFF9AD91"
+                        BorderThickness="2"
+                        IsReadOnly="True"
+                        FontSize="20"
+                            />
+                </ScrollViewer>
+
+            </StackPanel>
+
+            <Image
+                Grid.Column="1"
+                Source="{Binding ImageSource}" 
+                HorizontalAlignment="Left" 
+                VerticalAlignment="Top" 
+                Stretch="Uniform"
+                Width="400"
+                Height="400"
+                Margin="0,30,0,0"
+                />
+
 
         </Grid>
 
+        <Canvas 
+            Grid.ColumnSpan="2">
+
+            <ListBox
+                Width="600"
+                Height="Auto"
+                MaxHeight="400"
+                FontSize="20"
+                HorizontalAlignment="Left"
+                BorderBrush="#FFF9AD91"
+                Background="White"
+                Margin="120,74,0,0"
+                Visibility="{Binding IsListBoxVisible}"
+                ItemsSource="{Binding Suggestions}"
+                SelectedItem="{Binding SelectedListBoxItem}"
+                />
+            
+        </Canvas>
+        
         <Button Content="Back" 
                 HorizontalAlignment="Left" 
                 VerticalAlignment="Top" 
