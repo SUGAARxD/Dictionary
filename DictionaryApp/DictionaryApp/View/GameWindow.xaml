@@ -4,9 +4,102 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DictionaryApp.View"
+        xmlns:vm="clr-namespace:DictionaryApp.ViewModel"
         mc:Ignorable="d"
-        Title="GameWindow" Height="450" Width="800">
-    <Grid>
-        
+        Title="GameWindow" Height="600" Width="1000"
+        ResizeMode="CanMinimize"
+        WindowStartupLocation="CenterScreen">
+    <Window.DataContext>
+        <vm:GameVM/>
+    </Window.DataContext>
+
+    <Grid
+        Background="#FFFFEAE2">
+
+        <Button 
+            Content="Back" 
+            HorizontalAlignment="Left" 
+            VerticalAlignment="Top" 
+            Width="50" 
+            Height="30" 
+            FontSize="20"
+            Background="#FFFFDAC5" 
+            BorderBrush="#FFF9AD91" 
+            Click="GoToMainWindow"
+                />
+        <StackPanel
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center">
+            
+            <Border
+                Grid.Row="0"
+                BorderBrush="#FFF9AD91"
+                BorderThickness="2"
+                Width="405"
+                Height="305">
+                <Grid>
+
+                    <ScrollViewer 
+                        VerticalScrollBarVisibility="Auto">
+
+                        <TextBox 
+                            Text="{Binding Description}"
+                            Width="400"
+                            Height="300"
+                            Background="White"
+                            BorderThickness="0"
+                            FontSize="15"
+                            TextWrapping="Wrap"
+                            TextAlignment="Left"
+                            IsReadOnly="True"
+                                   />
+
+                    </ScrollViewer>
+
+                    <Image 
+                        Source="{Binding ImageSource}" 
+                        Stretch="Uniform"
+                        Width="400"
+                        Height="auto"
+                        MaxHeight="300"
+                            />
+
+                </Grid>
+
+            </Border>
+
+            <Grid
+                Margin="0,30,0,0"
+                >
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="4*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                
+                <TextBox
+                    Grid.Column="0"
+                    FontSize="20"
+                    BorderBrush="#FFF9AD91"
+                    IsEnabled="{Binding IsTextBoxEnabled}"
+                    Text="{Binding Word, UpdateSourceTrigger=PropertyChanged}"
+                    />
+
+                <Button
+                    HorizontalAlignment="Stretch"
+                    Grid.Column="1"
+                    Height="30"
+                    FontSize="20"
+                    Background="#FFFFDAC5" 
+                    BorderBrush="#FFF9AD91" 
+                    Content="{Binding ButtonContent}"
+                    Command="{Binding ButtonCommand}"
+                    />
+            
+            </Grid>
+
+        </StackPanel>
+    
     </Grid>
+    
 </Window>

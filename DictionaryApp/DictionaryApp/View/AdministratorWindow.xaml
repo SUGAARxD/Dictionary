@@ -18,8 +18,8 @@
         Background="#FFFFEAE2">
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition Width="714.286"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="2.5*"/>
         </Grid.ColumnDefinitions>
 
         <Button 
@@ -31,7 +31,7 @@
             FontSize="20"
             Background="#FFFFDAC5" 
             BorderBrush="#FFF9AD91" 
-            Click="GoToLoginWindow"
+            Click="GoToMainWindow"
                 />
 
         <StackPanel 
@@ -42,7 +42,7 @@
 
             <Button
                 Grid.Column="0"
-                Content="Search"
+                Content="Select"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Top"
                 Margin="0,0,0,0"
@@ -86,7 +86,7 @@
                 Orientation="Horizontal"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center">
-                
+
                 <Button 
                     Content="Add"
                     Width="100"
@@ -97,7 +97,7 @@
                     Command="{Binding AddWordCommand}"
                     Margin="0,0,50,0"
                         />
-                
+
                 <Button 
                     Content="Update"
                     Width="100"
@@ -108,7 +108,7 @@
                     Command="{Binding UpdateWordCommand}"
                     Margin="0,0,25,0"
                         />
-                
+
                 <Button 
                     Content="Delete"
                     Width="100"
@@ -119,7 +119,7 @@
                     Command="{Binding DeleteWordCommand}"
                     Margin="25,0,0,0"
                         />
-                
+
                 <Button 
                     Content="Clear"
                     Width="100"
@@ -130,7 +130,7 @@
                     Command="{Binding ClearCommand}"
                     Margin="50,0,0,0"
                         />
-                
+
             </StackPanel>
 
 
@@ -156,7 +156,7 @@
                         Width="350"
                         BorderBrush="#FFF9AD91"
                         FontSize="15"
-                        Text="{Binding Word}"
+                        Text="{Binding ChangeableWord, UpdateSourceTrigger=PropertyChanged}"
                             />
 
                     <Label
@@ -176,7 +176,7 @@
                             HorizontalAlignment="Stretch"
                             BorderBrush="#FFF9AD91"
                             FontSize="15"
-                            Text="{Binding Category}"
+                            Text="{Binding ChangeableCategory, UpdateSourceTrigger=PropertyChanged}"
                                 />
 
                         <ComboBox
@@ -197,7 +197,6 @@
                             />
 
                     <TextBox 
-                        Text="{Binding Description}"
                         Width="350"
                         Height="295"
                         BorderBrush="#FFF9AD91" 
@@ -206,6 +205,7 @@
                         FontSize="15"
                         TextWrapping="Wrap"
                         TextAlignment="Left"
+                        Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
                                />
 
                 </StackPanel>
@@ -214,11 +214,16 @@
                     Grid.Column="1">
 
                     <Grid>
-
+                        
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        
                         <Button
+                            Grid.Column="0"
                             Content="Add Photo"
-                            HorizontalAlignment="Left"
-                            Margin="50,0,0,0"
+                            HorizontalAlignment="Center"
                             Width="100" 
                             Height="30"
                             FontSize="15"
@@ -228,9 +233,9 @@
                             />
 
                         <Button
+                            Grid.Column="1"
                             Content="Remove Photo"
-                            HorizontalAlignment="Right"
-                            Margin="0,0,50,0"
+                            HorizontalAlignment="Center"
                             Width="100"
                             Height="30"
                             FontSize="15"
@@ -248,11 +253,12 @@
                         VerticalAlignment="Top"
                             >
 
-                        <Image Source="{Binding ImageSource}" 
-                           Stretch="Uniform"
-                           Width="350"
-                           Height="350"
-                               />
+                        <Image 
+                            Source="{Binding ImageSource}"
+                            RenderOptions.BitmapScalingMode="NearestNeighbor"
+                            Width="350"
+                            Height="350"
+                            />
 
                     </Border>
 

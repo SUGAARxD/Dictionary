@@ -137,11 +137,13 @@
                 Margin="0,30,0,0"
                 Visibility="{Binding IsImageBorderVisible}">
                 
-                <Image Source="{Binding ImageSource}" 
-                   Stretch="Uniform"
-                   Width="350"
-                   Height="auto"
-                   MaxHeight="350"
+                <Image 
+                    Source="{Binding ImageSource}"
+                    Stretch="Uniform"
+                    Width="auto"
+                    Height="auto"
+                    MaxWidth="350"
+                    MaxHeight="350"
                        />
                 
             </Border>

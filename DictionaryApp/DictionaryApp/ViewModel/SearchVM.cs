@@ -14,7 +14,9 @@ namespace DictionaryApp.ViewModel
     internal class SearchVM : BaseVM
     {
         private static readonly string _filePath = @"..\..\resources\Database\words.json";
-
+       
+        #region Properties  
+        
         private string _word;
         public string Word
         {
@@ -30,6 +32,7 @@ namespace DictionaryApp.ViewModel
                 NotifyPropertyChanged(nameof(Word));
             }
         }
+
         private string _description;
         public string Description
         {
@@ -66,6 +69,8 @@ namespace DictionaryApp.ViewModel
             }
         }
 
+        #endregion
+
         private readonly List<WordModel> _words;
         public ObservableCollection<string> Suggestions { get; set; } = new ObservableCollection<string>();
         public ObservableCollection<string> CategoryList { get; set; }
@@ -89,7 +94,8 @@ namespace DictionaryApp.ViewModel
             };
             foreach (WordModel word in _words)
             {
-                CategoryList.Add(word.Category);
+                if (!CategoryList.Contains(word.Category))
+                    CategoryList.Add(word.Category);
             }
             ImageSource = null;
             CategoryLabel = "Category: ";
@@ -124,12 +130,13 @@ namespace DictionaryApp.ViewModel
                 {
                     Description = word.Description;
                     CategoryLabel = "Category: " + word.Category;
-                    ImageSource = new BitmapImage(new Uri(word.ImagePath.Replace(@"\\", @"\"), UriKind.RelativeOrAbsolute));
+                    ChangeImage(word.ImagePath.Replace(@"\\", @"\"));
                     IsImageBorderVisible = Visibility.Visible;
                     break;
                 }
             }
         }
+
         private Visibility _isListBoxVisible;
         public Visibility IsListBoxVisible
         {
@@ -184,6 +191,17 @@ namespace DictionaryApp.ViewModel
                 _isImageBorderVisible = value;
                 NotifyPropertyChanged(nameof(IsImageBorderVisible));
             }
+        }
+        private void ChangeImage(string path)
+        {
+            BitmapImage bitmapImage = new BitmapImage();
+
+            bitmapImage.BeginInit();
+            bitmapImage.UriSource = new Uri(path, UriKind.RelativeOrAbsolute);
+            bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+            bitmapImage.EndInit();
+
+            ImageSource = bitmapImage;
         }
     }
 }
