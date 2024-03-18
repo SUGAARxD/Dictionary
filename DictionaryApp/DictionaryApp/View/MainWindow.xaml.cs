@@ -23,5 +23,12 @@ namespace DictionaryApp.View
             searchWindow.Show();
             this.Close();
         }
+
+        private void GoToGameWindow(object sender, RoutedEventArgs e)
+        {
+            GameWindow gameWindow = new GameWindow();
+            gameWindow.Show();
+            this.Close();
+        }
     }
 }

@@ -1,1 +1,8 @@
-﻿
+﻿[
+  {
+    "Text": "Panda",
+    "Description": "Lazy bambus eater",
+    "ImagePath": "\\resources\\Images\\default_image.jpg",
+    "Category": "Animal"
+  }
+]

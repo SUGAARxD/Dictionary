@@ -4,23 +4,264 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DictionaryApp.View"
+        xmlns:vm="clr-namespace:DictionaryApp.ViewModel"
         mc:Ignorable="d"
         Title="AdministratorWindow" Height="600" Width="1000"
         ResizeMode="CanMinimize"
         WindowStartupLocation="CenterScreen">
+
+    <Window.DataContext>
+        <vm:AdministratorVM/>
+    </Window.DataContext>
+
     <Grid
         Background="#FFFFEAE2">
-        
-        <Button Content="Back" 
-                HorizontalAlignment="Left" 
-                VerticalAlignment="Top" 
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="714.286"/>
+        </Grid.ColumnDefinitions>
+
+        <Button 
+            Content="Back" 
+            HorizontalAlignment="Left" 
+            VerticalAlignment="Top" 
+            Width="50" 
+            Height="30" 
+            FontSize="20"
+            Background="#FFFFDAC5" 
+            BorderBrush="#FFF9AD91" 
+            Click="GoToLoginWindow"
+                />
+
+        <StackPanel 
+            Grid.Column="0"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Center"
+            Margin="10,0,10,0">
+
+            <Button
+                Grid.Column="0"
+                Content="Search"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                Margin="0,0,0,0"
                 Width="50" 
                 Height="30" 
-                FontSize="20"
+                FontSize="15"
                 Background="#FFFFDAC5" 
-                BorderBrush="#FFF9AD91" 
-                Click="GoToLoginWindow"
+                BorderBrush="#FFF9AD91"
+                Command="{Binding SearchCommand}"
                 />
-        
+
+            <TextBox 
+                HorizontalAlignment="Stretch"
+                Height="30"
+                FontSize="20"
+                BorderBrush="#FFF9AD91"
+                Text="{Binding Word, UpdateSourceTrigger=PropertyChanged}"
+                />
+
+            <ListBox 
+                HorizontalAlignment="Stretch"
+                Height="400"
+                FontSize="20"
+                BorderBrush="#FFF9AD91"
+                Background="White"
+                ItemsSource="{Binding Words}"
+                SelectedItem="{Binding SelectedListBoxItem}"
+                />
+
+        </StackPanel>
+
+        <Grid
+            Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="6.5*"/>
+            </Grid.RowDefinitions>
+
+            <StackPanel 
+                Grid.Row="0"
+                Orientation="Horizontal"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center">
+                
+                <Button 
+                    Content="Add"
+                    Width="100"
+                    Height="30"
+                    FontSize="15"
+                    Background="#FFFFDAC5"
+                    BorderBrush="#FFF9AD91"
+                    Command="{Binding AddWordCommand}"
+                    Margin="0,0,50,0"
+                        />
+                
+                <Button 
+                    Content="Update"
+                    Width="100"
+                    Height="30"
+                    FontSize="15"
+                    Background="#FFFFDAC5"
+                    BorderBrush="#FFF9AD91"
+                    Command="{Binding UpdateWordCommand}"
+                    Margin="0,0,25,0"
+                        />
+                
+                <Button 
+                    Content="Delete"
+                    Width="100"
+                    Height="30"
+                    FontSize="15"
+                    Background="#FFFFDAC5"
+                    BorderBrush="#FFF9AD91"
+                    Command="{Binding DeleteWordCommand}"
+                    Margin="25,0,0,0"
+                        />
+                
+                <Button 
+                    Content="Clear"
+                    Width="100"
+                    Height="30"
+                    FontSize="15"
+                    Background="#FFFFDAC5"
+                    BorderBrush="#FFF9AD91"
+                    Command="{Binding ClearCommand}"
+                    Margin="50,0,0,0"
+                        />
+                
+            </StackPanel>
+
+
+            <Grid
+                Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+
+                <StackPanel
+                    Grid.Column="0"
+                    HorizontalAlignment="Left"
+                    Width="350">
+
+                    <Label
+                        Content="Word:"
+                        FontSize="15"
+                            />
+
+                    <TextBox
+                        Width="350"
+                        BorderBrush="#FFF9AD91"
+                        FontSize="15"
+                        Text="{Binding Word}"
+                            />
+
+                    <Label
+                        Content="Category:"
+                        FontSize="15"
+                            />
+
+                    <Grid>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="3*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBox
+                            Grid.Column="0"
+                            HorizontalAlignment="Stretch"
+                            BorderBrush="#FFF9AD91"
+                            FontSize="15"
+                            Text="{Binding Category}"
+                                />
+
+                        <ComboBox
+                            Grid.Column="1"
+                            Width="auto"
+                            Height="30"
+                            HorizontalAlignment="Left"
+                            ItemsSource="{Binding CategoryList}"
+                            Text="{Binding Category}"
+                                />
+
+                    </Grid>
+
+                    <Label
+                        Content="Description:"
+                        FontSize="15"
+                        Width="350"
+                            />
+
+                    <TextBox 
+                        Text="{Binding Description}"
+                        Width="350"
+                        Height="295"
+                        BorderBrush="#FFF9AD91" 
+                        Background="White"
+                        BorderThickness="1"
+                        FontSize="15"
+                        TextWrapping="Wrap"
+                        TextAlignment="Left"
+                               />
+
+                </StackPanel>
+
+                <StackPanel
+                    Grid.Column="1">
+
+                    <Grid>
+
+                        <Button
+                            Content="Add Photo"
+                            HorizontalAlignment="Left"
+                            Margin="50,0,0,0"
+                            Width="100" 
+                            Height="30"
+                            FontSize="15"
+                            Background="#FFFFDAC5" 
+                            BorderBrush="#FFF9AD91"
+                            Command="{Binding AddPhotoCommand}"
+                            />
+
+                        <Button
+                            Content="Remove Photo"
+                            HorizontalAlignment="Right"
+                            Margin="0,0,50,0"
+                            Width="100"
+                            Height="30"
+                            FontSize="15"
+                            Background="#FFFFDAC5"
+                            BorderBrush="#FFF9AD91"
+                            Command="{Binding RemovePhotoCommand}"
+                            />
+
+                    </Grid>
+
+                    <Border 
+                        BorderBrush="#FFF9AD91" 
+                        BorderThickness="2"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                            >
+
+                        <Image Source="{Binding ImageSource}" 
+                           Stretch="Uniform"
+                           Width="350"
+                           Height="350"
+                               />
+
+                    </Border>
+
+                </StackPanel>
+
+            </Grid>
+
+        </Grid>
+
     </Grid>
+
 </Window>

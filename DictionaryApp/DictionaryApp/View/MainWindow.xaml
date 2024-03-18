@@ -25,16 +25,28 @@
                 BorderBrush="#FFF9AD91" 
                 Click="GoToLoginWindow"
                 />
-        <Button Content="Search Page" 
+            
+            <Button Content="Search Page" 
                 HorizontalAlignment="Center" 
                 VerticalAlignment="Center" 
                 Width="150" 
                 Height="50" 
-                Margin="0, 0, 0, 0" 
+                Margin="0, 0, 0, 20" 
                 FontSize="20"
                 Background="#FFFFDAC5" 
                 BorderBrush="#FFF9AD91"
                 Click="GoToSearchWindow"
+                />
+
+            <Button Content="Game" 
+                HorizontalAlignment="Center" 
+                VerticalAlignment="Center" 
+                Width="150" 
+                Height="50" 
+                FontSize="20"
+                Background="#FFFFDAC5" 
+                BorderBrush="#FFF9AD91"
+                Click="GoToGameWindow"
                 />
             
         </StackPanel>

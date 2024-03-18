@@ -49,8 +49,7 @@
 
                 <Button 
                 Content="Search"
-                Width="Auto"
-                MaxWidth="50"
+                Width="50"
                 Height="30"
                 VerticalAlignment="Center"
                 HorizontalAlignment="Left"
@@ -76,58 +75,76 @@
             Grid.Row="1">
 
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1.5*"/>
+                <ColumnDefinition Width="1.3*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
             <StackPanel>
 
-                <TextBox
-                    Text="{Binding CategoryLabel}"
-                    Width="400"
-                    Background="#FFFFEAE2"
-                    BorderBrush="#FFFFEAE2"
+                <Label
+                    Content="{Binding CategoryLabel}"
+                    HorizontalAlignment="Stretch"
+                    Width="auto"
+                    MaxWidth="400"
+                    BorderBrush="#FFF9AD91"
                     FontSize="20"
-                    IsReadOnly="True"
-                    BorderThickness="0"
-                    />
-                <TextBox
-                    Text="Description:"
-                    Width="400"
-                    Background="#FFFFEAE2"
-                    BorderBrush="#FFFFEAE2"
-                    FontSize="20"
-                    IsReadOnly="True"
-                    BorderThickness="0"
+                    BorderThickness="0,0,0,1"
+                    Margin="0,0,0,10"
                     />
 
+                <Label
+                    Content="Description:"
+                    HorizontalAlignment="Stretch"
+                    Width="116"
+                    BorderBrush="#FFF9AD91"
+                    FontSize="20"
+                    BorderThickness="1,1,1,0"
+                    />
+
+                <Border
+                    BorderBrush="#FFF9AD91"
+                    BorderThickness="2"
+                    Width="405"
+                    Height="305">
+                        
                 <ScrollViewer 
                     VerticalScrollBarVisibility="Auto">
-                    <TextBox
+                    
+                    <TextBox 
                         Text="{Binding Description}"
                         Width="400"
-                        Height="400"
+                        Height="300"
+                        Background="White"
+                        BorderThickness="0"
+                        FontSize="15"
                         TextWrapping="Wrap"
                         TextAlignment="Left"
-                        BorderBrush="#FFF9AD91"
-                        BorderThickness="2"
                         IsReadOnly="True"
-                        FontSize="20"
-                            />
-                </ScrollViewer>
-
+                               />
+                    
+                    </ScrollViewer>
+                    
+                </Border>
+                    
             </StackPanel>
 
-            <Image
+            <Border 
+                BorderBrush="#FFF9AD91" 
+                BorderThickness="1"
                 Grid.Column="1"
-                Source="{Binding ImageSource}" 
-                HorizontalAlignment="Left" 
-                VerticalAlignment="Top" 
-                Stretch="Uniform"
-                Width="400"
-                Height="400"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
                 Margin="0,30,0,0"
-                />
+                Visibility="{Binding IsImageBorderVisible}">
+                
+                <Image Source="{Binding ImageSource}" 
+                   Stretch="Uniform"
+                   Width="350"
+                   Height="auto"
+                   MaxHeight="350"
+                       />
+                
+            </Border>
 
 
         </Grid>
@@ -151,15 +168,16 @@
             
         </Canvas>
         
-        <Button Content="Back" 
-                HorizontalAlignment="Left" 
-                VerticalAlignment="Top" 
-                Width="50" 
-                Height="30" 
-                FontSize="20"
-                Background="#FFFFDAC5" 
-                BorderBrush="#FFF9AD91" 
-                Click="GoToMainWindow"
+        <Button 
+            Content="Back" 
+            HorizontalAlignment="Left" 
+            VerticalAlignment="Top" 
+            Width="50" 
+            Height="30" 
+            FontSize="20"
+            Background="#FFFFDAC5" 
+            BorderBrush="#FFF9AD91" 
+            Click="GoToMainWindow"
                 />
 
     </Grid>
