@@ -11,22 +11,32 @@ namespace DictionaryApp.ViewModel
 {
     internal class GameVM : BaseVM
     {
-        private List<int> _wordsPositions;
-        private int _wordsCounter;
-        private static readonly string _filePath = @"..\..\resources\Database\words.json";
-        private  List<WordModel> _words;
         public GameVM()
         {
             _words = new List<WordModel>();
-            if (File.Exists(_filePath))
-            {
-                string jsonString = File.ReadAllText(_filePath);
-                _words = JsonConvert.DeserializeObject<List<WordModel>>(jsonString);
-            }
+            ReadWordsFromFile();
             _wordsPositions = new List<int>();
+            
             Reset();
         }
 
+        #region Properties and members
+
+        private List<WordModel> _words;
+        private List<int> _wordsPositions;
+        private int _wordsCounter;
+        private string _nextWord;
+
+        private string _word;
+        public string Word
+        {
+            get => _word;
+            set
+            {
+                _word = value;
+                NotifyPropertyChanged(nameof(Word));
+            }
+        }
         private string _description;
         public string Description
         {
@@ -57,16 +67,6 @@ namespace DictionaryApp.ViewModel
                 NotifyPropertyChanged(nameof(ButtonContent));
             }
         }
-        private string _word;
-        public string Word
-        {
-            get => _word;
-            set
-            {
-                _word = value;
-                NotifyPropertyChanged(nameof(Word));
-            }
-        }
         private bool _isTextBoxReadOnly;
         public bool IsTextBoxEnabled
         {
@@ -77,6 +77,24 @@ namespace DictionaryApp.ViewModel
                 NotifyPropertyChanged(nameof(IsTextBoxEnabled));
             }
         }
+
+        #endregion
+
+        #region File
+
+        private static readonly string _filePath = @"..\..\resources\Database\words.json";
+        private void ReadWordsFromFile()
+        {
+            if (File.Exists(_filePath))
+            {
+                string jsonString = File.ReadAllText(_filePath);
+                _words = JsonConvert.DeserializeObject<List<WordModel>>(jsonString);
+            }
+        }
+
+        #endregion
+        
+        #region Commands
 
         private ICommand _buttonCommand;
         public ICommand ButtonCommand
@@ -89,7 +107,6 @@ namespace DictionaryApp.ViewModel
             }
         }
 
-        private string _nextWord;
         private void ExecuteGameLogic(object parameter)
         {
 
@@ -136,34 +153,6 @@ namespace DictionaryApp.ViewModel
         {
             return !string.IsNullOrEmpty(_word) || ButtonContent.Equals("Start") || ButtonContent.Equals("Finish");
         }
-        private void Reset()
-        {
-            ButtonContent = "Start";
-            Random random = new Random();
-            HashSet<int> uniqueNumbers = new HashSet<int>();
-            while (uniqueNumbers.Count < _words.Count)
-            {
-                int randomNumber = random.Next(_words.Count);
-                uniqueNumbers.Add(randomNumber);
-            }
-            foreach(int number in uniqueNumbers)
-            {
-                _wordsPositions.Add(number); 
-            }
-            _wordsCounter = 0;
-            IsTextBoxEnabled = false;
-        }
-        private void ChangeImage(string path)
-        {
-            BitmapImage bitmapImage = new BitmapImage();
-
-            bitmapImage.BeginInit();
-            bitmapImage.UriSource = new Uri(path, UriKind.RelativeOrAbsolute);
-            bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
-            bitmapImage.EndInit();
-
-            ImageSource = bitmapImage;
-        }
         private void NextWord()
         {
             WordModel currentWord = _words[_wordsPositions[_wordsCounter]];
@@ -177,7 +166,7 @@ namespace DictionaryApp.ViewModel
             else
             {
                 Random random = new Random();
-                if (random.Next(42069) % 2 == 0)
+                if (random.Next(2) % 2 == 0)
                 {
                     ImageSource = null;
                     Description = currentWord.Description;
@@ -190,5 +179,47 @@ namespace DictionaryApp.ViewModel
             }
             _wordsCounter++;
         }
+
+        #endregion
+
+        #region Image
+
+        private void ChangeImage(string path)
+        {
+            BitmapImage bitmapImage = new BitmapImage();
+
+            bitmapImage.BeginInit();
+            bitmapImage.UriSource = new Uri(path, UriKind.RelativeOrAbsolute);
+            bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+            bitmapImage.EndInit();
+
+            ImageSource = bitmapImage;
+        }
+
+        #endregion
+
+        #region Util
+
+        private void Reset()
+        {
+            ButtonContent = "Start";
+            Random random = new Random();
+            HashSet<int> uniqueNumbers = new HashSet<int>();
+            while (uniqueNumbers.Count < _words.Count)
+            {
+                int randomNumber = random.Next(_words.Count);
+                uniqueNumbers.Add(randomNumber);
+            }
+            _wordsPositions.Clear();
+            foreach(int number in uniqueNumbers)
+            {
+                _wordsPositions.Add(number); 
+            }
+            _wordsCounter = 0;
+            IsTextBoxEnabled = false;
+        }
+
+        #endregion
+
     }
 }

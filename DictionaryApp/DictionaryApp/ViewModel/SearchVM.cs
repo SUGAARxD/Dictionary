@@ -13,10 +13,29 @@ namespace DictionaryApp.ViewModel
 {
     internal class SearchVM : BaseVM
     {
-        private static readonly string _filePath = @"..\..\resources\Database\words.json";
-       
-        #region Properties  
-        
+
+        public SearchVM()
+        {
+            IsListBoxVisible = Visibility.Hidden;
+
+
+            _words = new List<WordModel>();
+            ReadWordsFromFile();
+            
+            Suggestions = new ObservableCollection<string>();
+
+            CategoryList = new ObservableCollection<string>();
+            UpdateCategoryList();
+
+            ResetValues();
+        }
+
+        #region Properties and members
+
+        private List<WordModel> _words;
+        public ObservableCollection<string> Suggestions { get; set; }
+        public ObservableCollection<string> CategoryList { get; set; }
+
         private string _word;
         public string Word
         {
@@ -27,12 +46,11 @@ namespace DictionaryApp.ViewModel
                 
                 UpdateSuggestions();
 
-                IsListBoxVisible = (string.IsNullOrEmpty(value) || Suggestions.Count() == 0)? Visibility.Hidden : Visibility.Visible;
+                IsListBoxVisible = (string.IsNullOrEmpty(value) || Suggestions.Count() == 0) ? Visibility.Hidden : Visibility.Visible;
 
                 NotifyPropertyChanged(nameof(Word));
             }
         }
-
         private string _description;
         public string Description
         {
@@ -43,18 +61,6 @@ namespace DictionaryApp.ViewModel
                 NotifyPropertyChanged(nameof(Description));
             }
         }
-
-        private BitmapImage _imageSource;
-        public BitmapImage ImageSource
-        {
-            get => _imageSource;
-            private set
-            {
-                _imageSource = value;
-                NotifyPropertyChanged(nameof(ImageSource));
-            }
-        }
-
         private string _category;
         public string Category
         {
@@ -68,75 +74,36 @@ namespace DictionaryApp.ViewModel
                 NotifyPropertyChanged(nameof(Category));
             }
         }
-
-        #endregion
-
-        private readonly List<WordModel> _words;
-        public ObservableCollection<string> Suggestions { get; set; } = new ObservableCollection<string>();
-        public ObservableCollection<string> CategoryList { get; set; }
-
-        public SearchVM()
+        private string _categoryLabel;
+        public string CategoryLabel
         {
-            IsListBoxVisible = Visibility.Hidden;
-            IsImageBorderVisible = Visibility.Hidden;
-            Word = string.Empty;
-            _words = new List<WordModel>();
-            if (File.Exists(_filePath))
+            get => _categoryLabel;
+            set
             {
-                string jsonString = File.ReadAllText(_filePath);
-                _words = JsonConvert.DeserializeObject<List<WordModel>>(jsonString);
-            }
-
-            Category = "";
-            CategoryList = new ObservableCollection<string>
-            {
-                _category
-            };
-            foreach (WordModel word in _words)
-            {
-                if (!CategoryList.Contains(word.Category))
-                    CategoryList.Add(word.Category);
-            }
-            ImageSource = null;
-            CategoryLabel = "Category: ";
-            Description = string.Empty;
-        }
-
-        private ICommand _searchCommand;
-        public ICommand SearchCommand
-        {
-            get
-            {
-                if (_searchCommand == null)
-                    _searchCommand = new RelayCommand(ExecuteSearch);
-                return _searchCommand;
+                _categoryLabel = value;
+                NotifyPropertyChanged(nameof(CategoryLabel));
             }
         }
-        private void ExecuteSearch(object parameter)
+        private BitmapImage _imageSource;
+        public BitmapImage ImageSource
         {
-            IsListBoxVisible = Visibility.Hidden;
-            if (string.IsNullOrEmpty(_word))
+            get => _imageSource;
+            private set
             {
-                Description = string.Empty;
-                Category = string.Empty;
-                CategoryLabel = "Category:";
-                ImageSource = null;
-                IsImageBorderVisible = Visibility.Hidden;
-                return;
-            }
-            foreach (WordModel word in _words)
-            {
-                if (word.Text.Equals(_word))
-                {
-                    Description = word.Description;
-                    CategoryLabel = "Category: " + word.Category;
-                    ChangeImage(word.ImagePath.Replace(@"\\", @"\"));
-                    IsImageBorderVisible = Visibility.Visible;
-                    break;
-                }
+                _imageSource = value;
+                NotifyPropertyChanged(nameof(ImageSource));
             }
         }
-
+        private Visibility _isImageBorderVisible;
+        public Visibility IsImageBorderVisible
+        {
+            get => _isImageBorderVisible;
+            set
+            {
+                _isImageBorderVisible = value;
+                NotifyPropertyChanged(nameof(IsImageBorderVisible));
+            }
+        }
         private Visibility _isListBoxVisible;
         public Visibility IsListBoxVisible
         {
@@ -153,10 +120,91 @@ namespace DictionaryApp.ViewModel
             {
                 _word = value;
                 NotifyPropertyChanged(nameof(Word));
-                
+
                 IsListBoxVisible = Visibility.Hidden;
             }
         }
+
+        #endregion
+
+        #region File
+
+        private static readonly string _filePath = @"..\..\resources\Database\words.json";
+        private void ReadWordsFromFile()
+        {
+            if (File.Exists(_filePath))
+            {
+                string jsonString = File.ReadAllText(_filePath);
+                _words = JsonConvert.DeserializeObject<List<WordModel>>(jsonString);
+            }
+        }
+
+        #endregion
+
+        #region Commands
+
+        private ICommand _searchCommand;
+        public ICommand SearchCommand
+        {
+            get
+            {
+                if (_searchCommand == null)
+                    _searchCommand = new RelayCommand(ExecuteSearch);
+                return _searchCommand;
+            }
+        }
+        private void ExecuteSearch(object parameter)
+        {
+            IsListBoxVisible = Visibility.Hidden;
+            if (string.IsNullOrEmpty(_word))
+            {
+                ResetValues();
+                return;
+            }
+            foreach (WordModel word in _words)
+            {
+                if (word.Text.Equals(_word))
+                {
+                    Description = word.Description;
+                    CategoryLabel = "Category: " + word.Category;
+                    ChangeImage(word.ImagePath);
+                    IsImageBorderVisible = Visibility.Visible;
+                    break;
+                }
+            }
+        }
+
+        #endregion
+
+        #region Image
+
+        private void ChangeImage(string path)
+        {
+            BitmapImage bitmapImage = new BitmapImage();
+
+            bitmapImage.BeginInit();
+            bitmapImage.UriSource = new Uri(path, UriKind.RelativeOrAbsolute);
+            bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+            bitmapImage.EndInit();
+
+            ImageSource = bitmapImage;
+        }
+
+        #endregion
+
+        #region Util
+
+        private void UpdateCategoryList()
+        {
+            CategoryList.Clear();
+            CategoryList.Add("");
+            foreach (WordModel word in _words)
+            {
+                if (!CategoryList.Contains(word.Category))
+                    CategoryList.Add(word.Category);
+            }
+        }
+
         private void UpdateSuggestions()
         {
             Suggestions.Clear();
@@ -172,36 +220,18 @@ namespace DictionaryApp.ViewModel
                      Suggestions.Add(item);
                  });
         }
-        private string _categoryLabel;
-        public string CategoryLabel
-        {
-            get => _categoryLabel;
-            set
-            {
-                _categoryLabel = value;
-                NotifyPropertyChanged(nameof(CategoryLabel));
-            }
-        }
-        private Visibility _isImageBorderVisible;
-        public Visibility IsImageBorderVisible
-        {
-            get => _isImageBorderVisible;
-            set
-            {
-                _isImageBorderVisible = value;
-                NotifyPropertyChanged(nameof(IsImageBorderVisible));
-            }
-        }
-        private void ChangeImage(string path)
-        {
-            BitmapImage bitmapImage = new BitmapImage();
 
-            bitmapImage.BeginInit();
-            bitmapImage.UriSource = new Uri(path, UriKind.RelativeOrAbsolute);
-            bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
-            bitmapImage.EndInit();
-
-            ImageSource = bitmapImage;
+        private void ResetValues()
+        {
+            Word = string.Empty;
+            Description = string.Empty;
+            Category = string.Empty;
+            CategoryLabel = "Category: ";
+            ImageSource = null;
+            IsImageBorderVisible = Visibility.Hidden;
         }
+
+        #endregion
+
     }
 }

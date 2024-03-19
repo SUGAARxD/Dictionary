@@ -14,19 +14,12 @@ namespace DictionaryApp.ViewModel
 {
     internal class AdministratorVM : BaseVM
     {
-        private static readonly string _filePath = @"..\..\resources\Database\words.json";
 
-        private List<WordModel> _words;
-        public ObservableCollection<string> Words { get; set; }
 
         public AdministratorVM()
         {
             _words = new List<WordModel>();
-            if (File.Exists(_filePath))
-            {
-                string jsonString = File.ReadAllText(_filePath);
-                _words = JsonConvert.DeserializeObject<List<WordModel>>(jsonString);
-            }
+            ReadWordsFromFile();
 
             Words = new ObservableCollection<string>();
             foreach (WordModel word in _words)
@@ -34,20 +27,17 @@ namespace DictionaryApp.ViewModel
                 Words.Add(word.Text);
             }
 
-            Category = "";
-            CategoryList = new ObservableCollection<string>
-            {
-                _category
-            };
-            foreach (WordModel word in _words)
-            {
-                if (!CategoryList.Contains(word.Category))
-                    CategoryList.Add(word.Category);
-            }
-            _imagePath = WordModel.DefaultImagePath;
-            ChangeImage(_imagePath.Replace(@"\\", @"\"));
-            ChangeableCategory = string.Empty;
+            CategoryList = new ObservableCollection<string>();
+            UpdateCategoryList();
+
+            Clear();
         }
+
+        #region Properties and members
+
+        private List<WordModel> _words;
+        public ObservableCollection<string> Words { get; set; }
+        public ObservableCollection<string> CategoryList { get; set; }
 
         private string _word;
         public string Word
@@ -124,6 +114,29 @@ namespace DictionaryApp.ViewModel
             }
         }
 
+        #endregion
+
+        #region File
+
+        private static readonly string _filePath = @"..\..\resources\Database\words.json";
+        private void ReadWordsFromFile()
+        {
+            if (File.Exists(_filePath))
+            {
+                string jsonString = File.ReadAllText(_filePath);
+                _words = JsonConvert.DeserializeObject<List<WordModel>>(jsonString);
+            }
+        }
+        private void UpdateJsonFile()
+        {
+            string json = JsonConvert.SerializeObject(_words);
+            File.WriteAllText(_filePath, json);
+        }
+
+        #endregion
+
+        #region Commands
+
         private ICommand _updateWordCommand;
         public ICommand UpdateWordCommand
         {
@@ -138,20 +151,16 @@ namespace DictionaryApp.ViewModel
         {
             foreach (WordModel word in _words)
             {
-                if (word.Text.Equals(_word))
+                if (word.Text.ToLower().Equals(_word.ToLower()))
                 {
-                    Word.Replace(word.Text, _changeableWord);
                     word.Text = _changeableWord;
                     word.Category = _changeableCategory;
-                    if (!CategoryList.Contains(_changeableCategory))
-                        CategoryList.Add(_changeableCategory);
                     word.Description = _description;
                     word.ImagePath = _imagePath;
-                    Words.Clear();
-                    foreach (WordModel word1 in _words)
-                    {
-                        Words.Add(word1.Text);
-                    }
+                    Word = _changeableWord;
+
+                    UpdateCategoryList();
+                    ChangeableCategory = word.Category;
                     UpdateJsonFile();
                     MessageBox.Show("Word updated successfully!");
                     break;
@@ -178,14 +187,10 @@ namespace DictionaryApp.ViewModel
         private void ExecuteAddWord(object parameter)
         {
             _words.Add(new WordModel(_changeableWord, _description, _changeableCategory, _imagePath));
-            Words.Clear();
-            foreach (WordModel word in _words)
-            {
-                Words.Add(word.Text);
-            }
-            if (!CategoryList.Contains(_changeableCategory))
-                CategoryList.Add(_changeableCategory);
+            
             Clear();
+            UpdateCategoryList();
+            UpdateSuggestions();
             UpdateJsonFile();
             MessageBox.Show("Word added successfully!");
         }
@@ -194,7 +199,7 @@ namespace DictionaryApp.ViewModel
             return !string.IsNullOrEmpty(_changeableWord)
                 && !string.IsNullOrEmpty(_changeableCategory)
                 && !string.IsNullOrEmpty(_description)
-                && !Words.Contains(_changeableWord);
+                && Words.Where(item => item.ToLower().Equals(_changeableWord.ToLower())).ToList().Count == 0;
         }
 
         private ICommand _deleteWordCommand;
@@ -215,14 +220,8 @@ namespace DictionaryApp.ViewModel
                 {
                     _words.Remove(word);
                     Word = string.Empty;
-                    CategoryList.Clear();
-                    CategoryList.Add("");
-                    foreach (WordModel word1 in _words)
-                    {
-                        if (!CategoryList.Contains(word.Category))
-                            CategoryList.Add(word.Category);
-                    }
                     Clear();
+                    UpdateCategoryList();
                     UpdateJsonFile();
                     MessageBox.Show("Word deleted successfully!");
                     break;
@@ -257,8 +256,10 @@ namespace DictionaryApp.ViewModel
         }
         private void ExecuteAddPhoto(object parameter)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Image files (*.jpg, *.jpeg, *.png)|*.jpg;*.jpeg;*.png";
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Filter = "Image files (*.jpg, *.jpeg, *.png)|*.jpg;*.jpeg;*.png"
+            };
 
             if (openFileDialog.ShowDialog() == true)
             {
@@ -305,7 +306,7 @@ namespace DictionaryApp.ViewModel
         private void ExecuteRemovePhoto(object parameter)
         {
             _imagePath = WordModel.DefaultImagePath;
-            ChangeImage(_imagePath.Replace(@"\\", @"\"));
+            ChangeImage(_imagePath);
         }
         private ICommand _searchCommand;
         public ICommand SearchCommand
@@ -327,11 +328,43 @@ namespace DictionaryApp.ViewModel
                     Category = word.Category;
                     Description = word.Description;
                     _imagePath = word.ImagePath;
-                    ChangeImage(_imagePath.Replace(@"\\", @"\"));
+                    ChangeImage(_imagePath);
                     break;
                 }
             }
         }
+
+        #endregion
+
+        #region Image
+
+        private void ChangeImage(string path)
+        {
+            BitmapImage bitmapImage = new BitmapImage();
+
+            bitmapImage.BeginInit();
+            bitmapImage.UriSource = new Uri(path, UriKind.RelativeOrAbsolute);
+            bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+            bitmapImage.EndInit();
+
+            ImageSource = bitmapImage;
+        }
+
+        #endregion
+
+        #region Util
+
+        private void UpdateCategoryList()
+        {
+            CategoryList.Clear();
+            CategoryList.Add("");
+            foreach (WordModel word in _words)
+            {
+                if (!CategoryList.Contains(word.Category))
+                    CategoryList.Add(word.Category);
+            }
+        }
+
         private void UpdateSuggestions()
         {
             Words.Clear();
@@ -353,31 +386,19 @@ namespace DictionaryApp.ViewModel
                      Words.Add(item);
                  });
         }
-        public ObservableCollection<string> CategoryList { get; set; }
-        private void UpdateJsonFile()
-        {
-            string json = JsonConvert.SerializeObject(_words);
-            File.WriteAllText(_filePath, json);
-        }
+
         private void Clear()
         {
+            Word = string.Empty;
             ChangeableWord = string.Empty;
             Category = string.Empty;
             ChangeableCategory = string.Empty;
             Description = string.Empty;
             _imagePath = WordModel.DefaultImagePath;
-            ChangeImage(_imagePath.Replace(@"\\", @"\"));
+            ChangeImage(_imagePath);
         }
-        private void ChangeImage(string path)
-        {
-            BitmapImage bitmapImage = new BitmapImage();
 
-            bitmapImage.BeginInit();
-            bitmapImage.UriSource = new Uri(path, UriKind.RelativeOrAbsolute);
-            bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
-            bitmapImage.EndInit();
+        #endregion
 
-            ImageSource = bitmapImage;
-        }
     }
 }

@@ -6,13 +6,23 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.IO;
-using System;
-using System.Reflection;
 
 namespace DictionaryApp.ViewModel
 {
     internal class LoginVM : BaseVM
     {
+        public LoginVM()
+        {
+            _user = new UserModel();
+
+            _users = new List<UserModel>();
+            ReadUsersFromFile();
+        }
+
+        #region Properties and members
+
+        private List<UserModel> _users;
+
         private readonly UserModel _user;
         public string Username
         {
@@ -20,14 +30,14 @@ namespace DictionaryApp.ViewModel
             {
                 return _user.Username;
             }
-            set 
+            set
             {
                 _user.Username = value;
             }
         }
         public string Password
         {
-            get 
+            get
             {
                 return _user.Password;
             }
@@ -36,19 +46,25 @@ namespace DictionaryApp.ViewModel
                 _user.Password = value;
             }
         }
-        private static readonly string _filePath = @"..\..\resources\Database\users.json";
-        private readonly List<UserModel> _users;
-        public LoginVM()
-        {
-            _user = new UserModel();
 
-            _users = new List<UserModel>();
+        #endregion
+
+        #region File
+
+        private static readonly string _filePath = @"..\..\resources\Database\users.json";
+        private void ReadUsersFromFile()
+        {
             if (File.Exists(_filePath))
             {
                 string jsonString = File.ReadAllText(_filePath);
                 _users = JsonConvert.DeserializeObject<List<UserModel>>(jsonString);
             }
         }
+
+        #endregion
+
+        #region Commands
+
         private ICommand _loginCommand;
         public ICommand LoginCommand
         {
@@ -80,5 +96,8 @@ namespace DictionaryApp.ViewModel
         {
             return !string.IsNullOrWhiteSpace(Username) && !string.IsNullOrWhiteSpace(Password);
         }
+
+        #endregion
+
     }
 }
