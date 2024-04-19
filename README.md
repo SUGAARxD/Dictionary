@@ -13,7 +13,7 @@ This is a C# project utilizing WPF (.NET Framework) and MVVM (Model-View-ViewMod
 ![image](https://github.com/SUGAARxD/Dictionary/assets/80158909/3144f190-bbb3-4815-939f-034f61607dbd)
 
 ### 2. Administration Module
-- **Add, Edit, Delete, Clear**: Administrators can add (only if the word is not already in the dictionary), edit, delete dictionary entries and clear the entries.
+- **Add, Edit, Delete, Clear**: Administrators can add (only if the word is not already in the dictionary), edit, delete dictionary entries and clear the fields.
 - **Search Funtion**: Administrators have a search functionality that let's them to search the words faster.<br>
 
   **The administrator need to login first in order to acces the Administion window.**
