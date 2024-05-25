@@ -9,7 +9,7 @@ using System.IO;
 
 namespace DictionaryApp.ViewModel
 {
-    internal class LoginVM : BaseVM
+    internal class LoginVM : BaseNotify
     {
         public LoginVM()
         {

@@ -11,7 +11,7 @@ using System;
 
 namespace DictionaryApp.ViewModel
 {
-    internal class SearchVM : BaseVM
+    internal class SearchVM : BaseNotify
     {
 
         public SearchVM()

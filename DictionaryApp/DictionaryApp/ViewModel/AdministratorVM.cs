@@ -12,9 +12,8 @@ using System.Windows.Media.Imaging;
 
 namespace DictionaryApp.ViewModel
 {
-    internal class AdministratorVM : BaseVM
+    internal class AdministratorVM : BaseNotify
     {
-
 
         public AdministratorVM()
         {
@@ -87,6 +86,7 @@ namespace DictionaryApp.ViewModel
         }
         public string SelectedListBoxItem
         {
+            get => null;
             set
             {
                 _word = value;
@@ -329,6 +329,7 @@ namespace DictionaryApp.ViewModel
                     Description = word.Description;
                     _imagePath = word.ImagePath;
                     ChangeImage(_imagePath);
+                    UpdateSuggestions();
                     break;
                 }
             }

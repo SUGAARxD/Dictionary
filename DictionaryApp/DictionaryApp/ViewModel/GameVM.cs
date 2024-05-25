@@ -9,7 +9,7 @@ using System.Windows.Media.Imaging;
 
 namespace DictionaryApp.ViewModel
 {
-    internal class GameVM : BaseVM
+    internal class GameVM : BaseNotify
     {
         public GameVM()
         {

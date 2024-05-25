@@ -2,7 +2,7 @@
 
 namespace DictionaryApp.ViewModel
 {
-    public class BaseVM : INotifyPropertyChanged
+    public class BaseNotify : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
